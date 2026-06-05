@@ -1,613 +1,259 @@
-# Module 00 - The Antivirus Landscape (2026)
+# Module 00 - Welcome to the Game
 
-## What Is This Course About?
+You tried to get a red teaming job. You failed.
 
-You want to be a red teamer.
+Not because you are stupid. Not because you cannot learn.
+You failed because nobody taught you how this world actually works.
 
-A red teamer is someone who gets hired to hack into companies.
-But legally. With permission. To find problems before real attackers do.
+Most "hacking tutorials" online show you how to run someone else's tool.
+Type this command. Click this button. Copy this script.
+It works once, and then it stops working, and you have no idea why.
 
-The biggest thing that stops you from doing your job?
-Antivirus. Specifically, Windows Defender.
+That is not how real red teamers operate.
 
-Defender is the security software that comes with every Windows computer.
-It watches everything you do. It scans every file. It blocks attack tools.
-It logs your actions. It reports to the cloud.
+Real red teamers understand the machine they are attacking.
+They understand the defenses they are bypassing.
+They know why something works, not just that it works.
+And when a technique stops working, they know how to fix it.
 
-If you cannot get past Defender, you cannot do your job.
-
-This course teaches you how to get past it.
-
-Every technique. From beginner to expert.
-Step by step. Using only free, open source tools.
+This course will turn you into that person.
 
 ---
 
-## How This Course Is Built
+## What This Course Is About
 
-This is not a "read and memorize" course.
-This is a "build and break" course.
+Every company that runs Windows has security software trying to stop you.
+The most common one is Windows Defender. It comes built into every Windows
+computer. It runs automatically. It watches everything.
 
-The flow is simple:
+Your job as a red teamer is to get past it.
 
-```
-1. UNDERSTAND what something is and why it exists
-2. SET UP your lab so you can practice safely
-3. LEARN the technique with clear explanation
-4. PRACTICE it hands-on in your lab
-5. SEE the detection (understand how defenders catch you)
-6. LEARN to change your technique when it gets caught
-```
+Not by turning it off. Not by asking the admin to disable it.
+By understanding how it works and finding the gaps.
 
-Every module follows this pattern.
+This course teaches you how to do that. From zero to professional level.
+Every technique is explained, practiced, and tested against real, fully
+updated Windows Defender. You will use only free, open source tools.
 
----
+By the end of this course, you will know how to:
 
-## The Big Picture: What Are We Up Against?
-
-Before we go into details, here is the big picture.
-
-When you try to run an attack tool on a Windows computer,
-you have to get past several layers of security.
-
-Think of it as a building with multiple security guards.
-Each guard checks for different things.
-You need to get past ALL of them, not just one.
-
-Here are the guards:
-
-```
-GUARD 1: File Scanner
-   Checks every file that touches the disk.
-   If the file matches known malware, it gets deleted.
-   This is the oldest and simplest form of detection.
-
-GUARD 2: AMSI (Anti-Malware Scan Interface)
-   Checks scripts and code BEFORE they run.
-   Even if your script is hidden inside another file,
-   AMSI sees the actual code right before it runs.
-
-GUARD 3: Behavior Monitor
-   Watches what running programs DO.
-   Even if your file passes all scans,
-   if it does something suspicious (like reading passwords),
-   the behavior monitor catches it.
-
-GUARD 4: ETW (Event Tracing for Windows)
-   Logs everything that happens on the system.
-   Even if your attack works, the logs show what you did.
-   The security team reads these logs and finds you.
-
-GUARD 5: Cloud Protection
-   Sends unknown files to Microsoft's servers.
-   Microsoft has huge computing power and AI models.
-   They check your file and send back a verdict in seconds.
-
-GUARD 6: Kernel Protection
-   Defender runs partly in the deepest level of Windows.
-   It protects itself so you cannot just turn it off.
-```
-
-In this course, you will learn how to deal with each of these guards.
+- Get your code running on a protected Windows machine without Defender catching it
+- Stop Windows from logging your activity
+- Hide your tools inside legitimate programs
+- Encrypt your payloads so scanners cannot read them
+- Use Windows' own built-in tools to do your work
+- Clean up after yourself so investigators find nothing
+- Adapt your techniques when defenders catch up
 
 ---
 
-## What Is Windows Defender?
+## Who This Course Is For
 
-Windows Defender is the antivirus built into Windows 10 and Windows 11.
-Every Windows computer has it. It is turned on by default.
+You know how to use a computer. You can download files, open programs,
+type commands in a terminal. Maybe you have done some basic pentesting -
+run Nmap, used Metasploit once, watched some hacking videos.
 
-A lot of people think Defender is weak. That was true years ago.
-In 2026, Defender is one of the best antivirus products in the world.
-Many paid antivirus programs are not better than Defender.
+That is all you need.
 
-As a red teamer, Defender is your main problem.
-The good news: if you can get past Defender, you can get past almost anything.
+This course does not assume you know programming, Windows internals,
+or any evasion techniques. We start from scratch and build up.
 
-Defender does these things:
-
-**It scans files.**
-The moment a file appears on disk (downloaded, copied, created),
-Defender scans it. If the file matches known malware, it gets blocked.
-This is called "real-time protection."
-
-**It scans scripts before they run.**
-If you try to run a PowerShell script or a VBScript,
-Defender uses AMSI to read the script before it runs.
-Even if the script was encoded or hidden, AMSI sees the final version.
-If it matches known attack patterns, it gets blocked.
-
-**It watches program behavior.**
-Even if your file and script look clean, Defender watches what happens next.
-If your program opens another program's memory and writes code into it,
-that is suspicious. Defender will flag or block it.
-
-**It talks to the cloud.**
-When Defender sees a file it does not recognize,
-it can send the file (or info about it) to Microsoft's cloud servers.
-Microsoft checks it using AI and huge databases.
-A verdict comes back in a few seconds.
-If Microsoft says it is bad, Defender blocks it on your machine AND
-shares that info with every other Defender user worldwide.
-
-**It protects itself.**
-You cannot just open Settings and turn Defender off.
-There is a feature called Tamper Protection that blocks anyone
-from disabling Defender - even administrators.
-Defender also runs as a Protected Process, which means
-normal programs cannot mess with it.
+If you already know some of this stuff, great. You will move faster.
+If you know nothing, that is fine too. Every concept is explained
+before it is used.
 
 ---
 
-## What Is AMSI?
+## How This Course Works
 
-AMSI stands for Anti-Malware Scan Interface.
+This is a hands-on course. You will build things, break things,
+and fix things. Reading alone will not make you good at this.
 
-Here is the problem AMSI solves:
+Every module follows the same pattern. First you understand a concept.
+Then you set up your lab to practice it. Then you do it yourself.
+Then you see how defenders detect it. Then you learn how to change
+your approach when the current one stops working.
 
-In the old days, antivirus only scanned FILES on disk.
-Attackers figured out: "What if I never save a file?
-What if I run everything directly in memory?"
-
-They would encode their attack script, pass it to PowerShell,
-and PowerShell would decode it and run it - all in memory.
-The antivirus never saw the actual attack code because it
-only looked at the encoded version on disk.
-
-AMSI fixed this.
-
-Now, when PowerShell (or any supported program) is about to run code,
-it sends that code to AMSI first. AMSI passes it to Defender.
-Defender checks the ACTUAL code that is about to run - not the
-encoded version, not the file on disk, but the real, decoded,
-ready-to-execute code.
-
-If Defender says it is bad, the code is blocked before it runs.
-
-AMSI checks code in:
-- PowerShell scripts
-- VBScript and JavaScript (Windows Script Host)
-- .NET programs loaded in memory
-- Office macros (VBA)
-- WMI operations
-
-This is why many old attack techniques stopped working.
-Encoding your payload in Base64 used to be enough.
-Now AMSI sees through the encoding.
-
-Why does AMSI matter for you?
-
-If you want to run any attack tool in PowerShell or .NET,
-you need to get past AMSI first. If you do not, your tool
-will be blocked the moment it tries to run.
-
-AMSI bypass is usually the FIRST thing a red teamer does
-after getting access to a target machine.
-
-We will learn exactly how AMSI works inside and how to bypass it
-in Modules 03 and 04 (after you have a lab to practice in).
+The course is split into modules. Each module focuses on one skill.
+You should do them in order because later modules build on earlier ones.
 
 ---
 
-## What Is ETW?
+## The Course Map
 
-ETW stands for Event Tracing for Windows.
+Here is what you will learn, module by module.
 
-ETW is a logging system built into Windows.
-It records what happens on the system.
+**Module 00** is this introduction. You are reading it now.
 
-When a program starts, ETW can log it.
-When a network connection is made, ETW can log it.
-When a PowerShell command runs, ETW can log it.
-When a file is created, ETW can log it.
+**Module 01** is lab setup. You will build a safe practice environment
+with virtual machines. A Windows 11 machine to attack, and a Kali Linux
+machine to attack from. Nothing leaves your computer. Nothing touches
+real systems.
 
-Windows has over 1000 different ETW "providers."
-Each provider logs different types of events.
+**Module 02** covers Windows internals. Before you can bypass security,
+you need to understand how Windows actually runs programs. What happens
+when you double-click an EXE. How programs talk to the operating system.
+Where security products insert themselves into this process. This is the
+foundation everything else builds on.
 
-Why does this matter for red teaming?
+**Module 03** is your first real attack technique. You will learn about
+AMSI - the system that scans your scripts before they run - and how to
+get past it. This is the starting point for almost every red team
+operation that uses PowerShell or .NET tools.
 
-Even if your attack works perfectly - you bypass Defender,
-you bypass AMSI, you steal the credentials - ETW recorded
-everything you did.
+**Module 04** goes deeper into AMSI bypass. More methods, more advanced
+approaches, and you will build your own bypass tool from scratch.
 
-The next morning, the security team opens their log dashboard.
-They see:
-- "PowerShell ran this suspicious command at 2:13 AM"
-- "A .NET assembly was loaded in memory at 2:14 AM"
-- "Process X accessed the password storage at 2:15 AM"
+**Module 05** covers ETW, the logging system that records everything
+you do. You will learn how to stop it from recording your actions,
+so the security team has nothing to investigate.
 
-They trace your whole attack. They know exactly what you did,
-what tools you used, and which computers you touched.
+**Module 06** teaches process injection fundamentals. This is how you
+put your code inside another running program - making it look like
+a normal, trusted process is doing the work instead of your tool.
 
-This is why red teamers need to deal with ETW too.
-You either disable the logging before your attack,
-or you clean up the logs after.
+**Module 07** takes injection further. Reflective loading, process
+hollowing, and other advanced techniques that leave almost no trace.
 
-We will learn how ETW works and how to deal with it in Module 05.
+**Module 08** is about code obfuscation. Making your code unreadable
+to automated scanners. String tricks, encoding, and tools that
+transform your code so it slips past pattern matching.
 
----
+**Module 09** covers direct system calls and unhooking. This is how
+you talk directly to the Windows kernel, skipping the monitoring
+hooks that security products place in your way.
 
-## The Cat and Mouse Game
+**Module 10** teaches Living off the Land. Using tools that are already
+installed on every Windows machine - certutil, mshta, bitsadmin, and
+others - to do your work without bringing any custom tools at all.
 
-This is the most important concept in this whole course.
+**Module 11** is payload encryption and packing. Wrapping your
+attack code in encryption so scanners cannot read it, and building
+custom loaders that decrypt and run it in memory.
 
-Security is a cat and mouse game.
-Attackers find new ways to get past defenses.
-Defenders find new ways to catch attackers.
-Then attackers find new ways again.
-This never ends.
+**Module 12** covers advanced memory techniques. Tricks with memory
+permissions, hiding code in unexpected places, and other low-level
+methods that avoid detection.
 
-What does this mean for you?
+**Module 13** is about cleaning up. Changing file timestamps, clearing
+logs, removing evidence. Making it look like you were never there.
 
-**Every technique has a shelf life.**
+**Module 14** covers process manipulation. Faking parent-child process
+relationships, hiding command-line arguments, and borrowing security
+tokens from other processes.
 
-A technique that works today might get caught next month.
-Microsoft updates Defender signatures every single day.
-Sometimes multiple times per day.
-
-When a new bypass technique is published online,
-this is roughly what happens:
-
-```
-Week 1: Researcher publishes a new technique on a blog
-Week 2: Red teamers start using it
-Week 3: Microsoft sees the technique being used in the wild
-Week 4: Microsoft releases a detection update
-Week 5: The technique no longer works on updated systems
-```
-
-This cycle repeats forever.
-
-**So why learn techniques if they get caught?**
-
-Because the CONCEPTS do not change. Only the details change.
-
-For example: AMSI bypass works by changing code in memory
-so the scan function does not work anymore.
-Microsoft might catch the SPECIFIC way you change it.
-But the concept - "change the scan function in memory" - still works.
-You just need to change it in a DIFFERENT way.
-
-This is the difference between a tool user and a real red teamer:
-
-```
-TOOL USER:
-- Downloads a bypass script from GitHub
-- Runs it. It works!
-- Microsoft blocks the script next month
-- Stuck. Looks for another script. 
-
-REAL RED TEAMER:
-- Understands WHY the bypass works
-- When the specific script gets caught,
-  changes the approach slightly
-- Makes a new version that works again
-- Never stuck. Never dependent on one script.
-```
-
-This course teaches you to be the second type.
-For every technique, we explain:
-1. What it does
-2. WHY it works
-3. How defenders catch it
-4. How to change it when it gets caught
+**Module 15** is the advanced module. Protected Process Light, vulnerable
+drivers, and kernel-level attacks. This is expert territory.
 
 ---
 
-## What Tools Will We Use?
+## The One Thing You Must Understand Before Starting
 
-This course uses only free, open source tools.
-You do not need to buy anything.
+Security is a game between two sides. Attackers find ways to get past
+defenses. Defenders find ways to catch attackers. Then attackers adapt.
+Then defenders adapt. This never stops.
 
-Here is a quick overview. Do not worry about installing
-these yet - we will set everything up in the lab module.
+Every technique in this course will eventually get detected by some
+future update to Defender. That is normal. That is expected.
 
-**Metasploit / msfvenom**
-The most well-known attack framework.
-We use it mainly to create raw payload code (shellcode).
-The raw payload by itself gets caught by Defender.
-That is the point - we learn to wrap it in ways that do not get caught.
+The goal is not to memorize techniques that work forever.
+The goal is to understand how things work deeply enough that when
+a technique gets caught, you can figure out what changed and adapt.
 
-**Sliver C2**
-A modern command and control framework by Bishop Fox.
-When you compromise a target, you need a way to send commands to it.
-That is what a C2 framework does.
-Sliver is actively maintained in 2026 and is very popular with red teams.
+A person who memorizes ten bypass scripts is useless when script
+number eleven is needed. A person who understands why bypasses work
+can create script number eleven themselves.
 
-**Mythic C2**
-Another C2 framework. This one has a nice web interface
-and supports many different types of agents.
-Good to know as an alternative to Sliver.
+This course teaches you to be the second person.
 
-**PowerShell**
-Already installed on every Windows machine.
-We use it for scripting, AMSI bypass practice, and running tools.
-It is heavily monitored by Defender, which makes it good for learning -
-if your technique works in PowerShell, it works against real monitoring.
-
-**C# and .NET**
-Many red team tools are written in C#.
-We will write some tools in C# to practice building our own.
-You do not need to be a C# expert. We will explain the code.
-
-**Python**
-We use Python for some helper scripts and payload building.
-Basic Python knowledge is helpful but not required.
-
-**SysWhispers**
-A tool that helps you talk directly to the Windows kernel,
-skipping the security hooks that Defender and EDR products place.
-We will learn why this matters and how to use it.
-
-**Donut**
-Converts regular programs into shellcode (small, injectable code).
-This lets you take any .NET tool and inject it into another process
-without ever saving a file to disk.
-
-**Process Hacker / System Informer**
-A tool that shows you everything running on a Windows system.
-What processes are running, what DLLs they loaded, what memory
-they are using. Essential for understanding what is happening
-under the hood.
+For every technique, we will cover what it does, why it works, how
+defenders detect it, and how to change your approach when the current
+version gets caught. This "adapt and overcome" mindset is what
+separates someone who passes the interview from someone who does not.
 
 ---
 
-## Course Module Map
+## Rules
 
-Here is every module and what it covers.
-This is your roadmap for the whole course.
+**Use a lab.** Never practice on systems you do not own. We will build
+a safe lab with virtual machines in Module 01. Everything stays inside
+your computer.
 
-```
-MODULE 00 (This One)
-What: The landscape. What we are up against. What we will learn.
+**Get permission.** If you ever use these techniques on a real company's
+systems, you need written permission first. Without it, it is a crime.
 
-MODULE 01 - LAB SETUP
-What: Build your practice lab from scratch.
-      VMware Pro, Windows 11 VM, attacker machine.
-      Step by step, screenshot by screenshot.
-      You MUST complete this before anything else.
+**Do the labs.** Reading is not enough. You learn by doing. Every module
+has hands-on exercises. Do all of them.
 
-MODULE 02 - WINDOWS INTERNALS FOR RED TEAMERS
-What: How Windows works under the hood.
-      What is a process, what is memory, what is a DLL.
-      How programs talk to Windows. User mode vs kernel mode.
-      The API chain that every attack tool uses.
-      No attacks yet - just understanding the battlefield.
+**Take notes.** Write down what works and what does not. Include the date
+and the Defender version. Techniques that work today might not work
+next week. Your notes become your personal playbook.
 
-MODULE 03 - AMSI BYPASSES PART 1
-What: How AMSI works inside (the technical details).
-      Your first AMSI bypass using PowerShell reflection.
-      String tricks to avoid detection.
-      Hands-on: run blocked scripts after bypassing AMSI.
-
-MODULE 04 - AMSI BYPASSES PART 2
-What: Advanced AMSI bypass methods.
-      Memory patching techniques.
-      Hardware breakpoint bypass (no code changes in memory).
-      Building your own bypass tool.
-
-MODULE 05 - ETW PATCHING AND LOGGING
-What: How ETW works inside.
-      How to stop Windows from logging your actions.
-      Patching the logging functions in memory.
-      Before-and-after: show that logs are empty.
-
-MODULE 06 - PROCESS INJECTION FUNDAMENTALS
-What: Putting your code inside another running program.
-      The key Windows functions you need to know.
-      DLL injection step by step.
-      Shellcode injection step by step.
-
-MODULE 07 - PROCESS INJECTION ADVANCED
-What: Reflective DLL injection (invisible to file scanners).
-      Process hollowing (hiding inside a legit program).
-      APC injection (triggering code through thread queues).
-      Real malware case studies.
-
-MODULE 08 - CODE OBFUSCATION AND STRINGS
-What: Making your code unreadable to scanners.
-      String encoding (Base64, hex, XOR).
-      Dynamic string building.
-      Tools that do obfuscation for you.
-
-MODULE 09 - SYSCALLS AND API UNHOOKING
-What: How security products hook Windows functions.
-      Calling the kernel directly (skipping the hooks).
-      Removing hooks from memory.
-      Building your own syscall wrapper.
-
-MODULE 10 - LIVING OFF THE LAND
-What: Using Windows built-in tools for attacks.
-      certutil, mshta, bitsadmin, rundll32 and more.
-      No custom tools needed - just what Windows gives you.
-      How Defender detects this and how to avoid it.
-
-MODULE 11 - PAYLOAD ENCRYPTION AND PACKING
-What: Encrypting your attack code so scanners cannot read it.
-      AES, XOR, RC4 encryption.
-      Building custom loaders that decrypt and run payloads.
-      Custom packers.
-
-MODULE 12 - ADVANCED MEMORY TECHNIQUES
-What: Memory permission tricks.
-      Hiding shellcode in unexpected places.
-      ROP chains basics.
-      Code caves.
-
-MODULE 13 - TIMESTOMPING AND ARTIFACT CLEANUP
-What: Changing file timestamps to hide your tracks.
-      Clearing event logs.
-      Removing evidence of your presence.
-      What investigators look for.
-
-MODULE 14 - PROCESS MANIPULATION
-What: Faking parent process relationships.
-      Hiding command-line arguments.
-      Stealing and using other processes' security tokens.
-
-MODULE 15 - PPL AND KERNEL ATTACKS
-What: Protected Process Light - what it is and why it matters.
-      Using vulnerable drivers to get kernel access (BYOVD).
-      Kernel-level evasion.
-```
+**Break things.** Your lab is for breaking. That is why we have snapshots.
+If you mess something up, restore the snapshot and try again. You learn
+the most from things that go wrong.
 
 ---
 
-## What You Need Before Starting
+## Tools We Will Use
 
-**Skills you need:**
-- You can use Windows normally (open programs, download files, use settings)
-- You can type commands in a terminal (PowerShell or Command Prompt)
-- You have basic understanding of what hacking/pentesting is
+Everything in this course is free and open source. Here is a quick list
+of the main tools. You do not need to download any of these yet. We
+will set everything up properly in the lab module.
 
-That is it. Everything else, this course teaches you.
+**Metasploit and msfvenom** for generating payloads. These are the
+starting point - raw payload code that we then wrap in our own
+evasion techniques.
 
-**Hardware you need:**
-- A computer with at least 4 CPU cores
-- At least 16 GB RAM (32 GB is better)
-- At least 100 GB free disk space
-- Internet connection
+**Sliver** is a modern command and control framework. When you
+compromise a machine, you need a way to send it commands. Sliver
+handles that. It is actively maintained and widely used by real
+red teams.
 
-**Software you need:**
-- All free. We will download everything in Module 01 (Lab Setup).
+**Mythic** is another command and control framework with a web
+interface. Good to know as an alternative.
 
----
+**PowerShell** is already on every Windows machine. We use it
+for scripting, testing, and as a target for AMSI practice.
 
-## Important Rules
+**SysWhispers** helps you talk directly to the Windows kernel,
+bypassing security monitoring.
 
-**1. ALWAYS use a lab.**
-Never practice on systems you do not own.
-We will build a safe lab with virtual machines in Module 01.
-Everything stays inside your lab. Nothing touches real systems.
+**Donut** converts regular programs into injectable code that
+runs entirely in memory without touching disk.
 
-**2. ALWAYS get written permission.**
-If you ever test these techniques on a company's systems,
-you must have written permission FIRST.
-Without permission, it is a crime. No exceptions.
-
-**3. DO the hands-on labs.**
-Reading is not enough. You need to practice.
-Every module has labs. Do all of them.
-If you skip labs, you will not learn.
-
-**4. BREAK things.**
-Your lab is for breaking. That is why we use virtual machines.
-If you break something, restore from a snapshot and try again.
-You learn the most from things that go wrong.
-
-**5. KEEP notes.**
-Write down what works and what does not.
-Write down which Defender version you tested against.
-Note the date - techniques that work today might not work next week.
-
----
-
-## How Attackers Get Caught (The Quick Version)
-
-Before we start learning techniques, you should know
-what mistakes get attackers caught.
-
-This gives you a mental checklist for everything you will learn later.
-
-**Mistake 1: Using known tools without changing them.**
-You download a famous hacking tool from GitHub.
-You run it on the target. Defender recognizes it instantly.
-Blocked in less than 1 second.
-Why? Defender has a database of every known attack tool.
-The file's fingerprint matches. Game over.
-
-**Mistake 2: Running attack scripts without dealing with AMSI.**
-You type an attack command in PowerShell.
-AMSI sees the command text and recognizes it as an attack.
-Blocked before it even runs.
-Why? AMSI reads the actual command before PowerShell runs it.
-
-**Mistake 3: Leaving logs behind.**
-Your attack works. You steal credentials. You feel good.
-Next morning, the security team opens the logs.
-They see every command you ran, every file you touched,
-every connection you made. They trace your whole attack.
-Why? ETW was logging everything in the background.
-
-**Mistake 4: Creating suspicious patterns.**
-Your malware starts cmd.exe from inside Microsoft Word.
-Word should never start cmd.exe. This pattern is a known
-indicator of a macro attack. Defender blocks it.
-Why? Defender watches parent-child process relationships.
-
-**Mistake 5: Writing files to disk.**
-You save your attack tool as a file on the target computer.
-Defender scans it the moment it hits the disk.
-If the file has any known pattern, it gets quarantined.
-Why? Defender scans every file that appears on disk.
-
-This course teaches you how to avoid ALL of these mistakes.
+**System Informer** shows you everything happening inside
+a running Windows system. Processes, memory, DLLs, network
+connections. Essential for understanding what is going on.
 
 ---
 
 ## What Makes This Course Different
 
-Most courses and blog posts show you ONE technique.
-"Here is a script, run it, it bypasses AMSI."
+Most tutorials show you one technique and move on. Here is a script,
+it bypasses AMSI, good luck. That works until Defender updates its
+signatures next week and the script gets caught.
 
-That is fine until the script gets caught by the next Defender update.
-Then you are stuck.
+This course teaches the thinking behind the techniques. When you
+understand why a bypass works, you can modify it when it breaks.
+When you understand what defenders are looking for, you can avoid
+those patterns. When you understand the internals of the system,
+you can find new bypass methods that nobody has published yet.
 
-This course teaches you:
-- **What** the technique does
-- **Why** it works (the part most courses skip)
-- **How** defenders detect it
-- **How to change it** when the current version gets caught
-
-By the end, you will not just know techniques.
-You will understand the game well enough to create your own.
-
----
-
-## Glossary (Terms You Will See in This Course)
-
-Do not memorize these now. Come back to this list when
-you see a term you do not recognize.
-
-```
-AV          Antivirus - software that finds and blocks malware
-Defender    Windows Defender - the AV built into Windows
-AMSI        Anti-Malware Scan Interface - scans code before it runs
-ETW         Event Tracing for Windows - logs system activity
-EDR         Endpoint Detection and Response - advanced security tool
-C2          Command and Control - framework to control compromised machines
-Payload     The code you want to run on the target
-Shellcode   Small, self-contained code (often the payload)
-Beacon      A C2 agent that checks in with your server regularly
-DLL         Dynamic Link Library - shared code files on Windows
-API         Application Programming Interface - functions you can call
-Syscall     System Call - a direct request to the Windows kernel
-Hook        Code placed by security tools to monitor function calls
-Unhooking   Removing those monitoring hooks
-Process     A running program
-Injection   Putting your code inside another running process
-LOLBin      Living off the Land Binary - using built-in Windows tools to attack
-Obfuscation Making code hard for scanners to read
-PPL         Protected Process Light - Windows protection for important processes
-BYOVD       Bring Your Own Vulnerable Driver - using a weak driver to attack
-Signature   A known pattern that identifies specific malware
-Heuristic   A rule-based guess about whether something is suspicious
-Fileless    An attack that never saves files to disk
-VM          Virtual Machine - a computer running inside your computer
-Snapshot    A saved state of a VM you can go back to
-```
+That is the difference between following a recipe and knowing
+how to cook.
 
 ---
 
 ## Ready?
 
-Next module: we build the lab.
+The next module is lab setup. You will build your practice environment
+from scratch. Take your time with it. Make sure everything works
+before moving on.
 
-No lab = no practice.
-No practice = no learning.
+No lab means no practice. No practice means no learning.
 
-Go to Module 01 and set up your lab.
-Once your lab is running, the real fun starts.
+Let's go.
 
 ---
 
@@ -615,6 +261,6 @@ Next: [Module 01 - Lab Setup](./01_LAB_SETUP.md)
 
 ---
 
-*This course is for authorized security testing and education only.*
-*Always get written permission before testing any system.*
-*The author is not responsible for misuse of this information.*
+*This course is for authorized security testing and education only.
+Always get written permission before testing any system.
+The author is not responsible for misuse of this information.*
