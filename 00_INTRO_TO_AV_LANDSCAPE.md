@@ -66,16 +66,16 @@ before it is used.
 
 ## How This Course Works
 
-This is a hands-on course. You will build things, break things,
-and fix things. Reading alone will not make you good at this.
+This is a hands-on course. Reading alone will not make you good at this.
 
-Every module follows the same pattern. First you understand a concept.
-Then you set up your lab to practice it. Then you do it yourself.
-Then you see how defenders detect it. Then you learn how to change
-your approach when the current one stops working.
+Every module follows the same pattern:
 
-The course is split into modules. Each module focuses on one skill.
-You should do them in order because later modules build on earlier ones.
+1. **Understand** the concept - what it is and why it exists
+2. **Practice** it in your lab with step-by-step guidance
+3. **See the detection** - how defenders catch this technique
+4. **Learn to adapt** - how to change your approach when it gets caught
+
+Modules are meant to be done in order. Later ones build on earlier ones.
 
 ---
 
@@ -83,67 +83,24 @@ You should do them in order because later modules build on earlier ones.
 
 Here is what you will learn, module by module.
 
-**Module 00** is this introduction. You are reading it now.
-
-**Module 01** is lab setup. You will build a safe practice environment
-with virtual machines. A Windows 11 machine to attack, and a Kali Linux
-machine to attack from. Nothing leaves your computer. Nothing touches
-real systems.
-
-**Module 02** covers Windows internals. Before you can bypass security,
-you need to understand how Windows actually runs programs. What happens
-when you double-click an EXE. How programs talk to the operating system.
-Where security products insert themselves into this process. This is the
-foundation everything else builds on.
-
-**Module 03** is your first real attack technique. You will learn about
-AMSI - the system that scans your scripts before they run - and how to
-get past it. This is the starting point for almost every red team
-operation that uses PowerShell or .NET tools.
-
-**Module 04** goes deeper into AMSI bypass. More methods, more advanced
-approaches, and you will build your own bypass tool from scratch.
-
-**Module 05** covers ETW, the logging system that records everything
-you do. You will learn how to stop it from recording your actions,
-so the security team has nothing to investigate.
-
-**Module 06** teaches process injection fundamentals. This is how you
-put your code inside another running program - making it look like
-a normal, trusted process is doing the work instead of your tool.
-
-**Module 07** takes injection further. Reflective loading, process
-hollowing, and other advanced techniques that leave almost no trace.
-
-**Module 08** is about code obfuscation. Making your code unreadable
-to automated scanners. String tricks, encoding, and tools that
-transform your code so it slips past pattern matching.
-
-**Module 09** covers direct system calls and unhooking. This is how
-you talk directly to the Windows kernel, skipping the monitoring
-hooks that security products place in your way.
-
-**Module 10** teaches Living off the Land. Using tools that are already
-installed on every Windows machine - certutil, mshta, bitsadmin, and
-others - to do your work without bringing any custom tools at all.
-
-**Module 11** is payload encryption and packing. Wrapping your
-attack code in encryption so scanners cannot read it, and building
-custom loaders that decrypt and run it in memory.
-
-**Module 12** covers advanced memory techniques. Tricks with memory
-permissions, hiding code in unexpected places, and other low-level
-methods that avoid detection.
-
-**Module 13** is about cleaning up. Changing file timestamps, clearing
-logs, removing evidence. Making it look like you were never there.
-
-**Module 14** covers process manipulation. Faking parent-child process
-relationships, hiding command-line arguments, and borrowing security
-tokens from other processes.
-
-**Module 15** is the advanced module. Protected Process Light, vulnerable
-drivers, and kernel-level attacks. This is expert territory.
+| Module | Topic | What You Will Learn |
+|--------|-------|---------------------|
+| 00 | **Introduction** | This page. The landscape, the mindset, the roadmap. |
+| 01 | **Lab Setup** | Build your practice environment with Windows 11 + Kali Linux VMs. |
+| 02 | **Windows Internals** | How Windows runs programs, how programs talk to the OS, where security products sit. |
+| 03 | **AMSI Bypass Part 1** | The system that scans scripts before they run, and your first bypasses. |
+| 04 | **AMSI Bypass Part 2** | Advanced bypass methods. Build your own bypass tool. |
+| 05 | **ETW Patching** | The logging system that records everything. How to stop it. |
+| 06 | **Process Injection Basics** | Put your code inside another running program. DLL and shellcode injection. |
+| 07 | **Process Injection Advanced** | Reflective loading, process hollowing, APC injection. |
+| 08 | **Code Obfuscation** | Make your code unreadable to scanners. String tricks, encoding, transforms. |
+| 09 | **Syscalls & Unhooking** | Talk directly to the Windows kernel, skip security hooks. |
+| 10 | **Living off the Land** | Use Windows built-in tools (certutil, mshta, etc.) for attacks. |
+| 11 | **Payload Encryption** | Encrypt payloads so scanners can't read them. Build custom loaders. |
+| 12 | **Advanced Memory** | Memory permission tricks, code caves, hiding code in unexpected places. |
+| 13 | **Artifact Cleanup** | Change timestamps, clear logs, remove evidence of your presence. |
+| 14 | **Process Manipulation** | Fake parent processes, hide command-line args, steal tokens. |
+| 15 | **PPL & Kernel Attacks** | Protected processes, vulnerable drivers, kernel-level evasion. |
 
 ---
 
@@ -175,56 +132,26 @@ separates someone who passes the interview from someone who does not.
 
 ## Rules
 
-**Use a lab.** Never practice on systems you do not own. We will build
-a safe lab with virtual machines in Module 01. Everything stays inside
-your computer.
-
-**Get permission.** If you ever use these techniques on a real company's
-systems, you need written permission first. Without it, it is a crime.
-
-**Do the labs.** Reading is not enough. You learn by doing. Every module
-has hands-on exercises. Do all of them.
-
-**Take notes.** Write down what works and what does not. Include the date
-and the Defender version. Techniques that work today might not work
-next week. Your notes become your personal playbook.
-
-**Break things.** Your lab is for breaking. That is why we have snapshots.
-If you mess something up, restore the snapshot and try again. You learn
-the most from things that go wrong.
+1. **Use a lab.** Never practice on systems you do not own. We build a safe lab with virtual machines in Module 01.
+2. **Get permission.** Testing on a real company's systems without written permission is a crime. No exceptions.
+3. **Do the labs.** Reading is not enough. Every module has hands-on exercises. Do all of them.
+4. **Take notes.** Write down what works, what does not, the date, and the Defender version. This becomes your personal playbook.
+5. **Break things.** Your lab is for breaking. Restore a snapshot and try again. You learn the most from failures.
 
 ---
 
 ## Tools We Will Use
 
-Everything in this course is free and open source. Here is a quick list
-of the main tools. You do not need to download any of these yet. We
-will set everything up properly in the lab module.
+Everything is free and open source. You do not need to download any of
+these yet - we set everything up in Module 01.
 
-**Metasploit and msfvenom** for generating payloads. These are the
-starting point - raw payload code that we then wrap in our own
-evasion techniques.
-
-**Sliver** is a modern command and control framework. When you
-compromise a machine, you need a way to send it commands. Sliver
-handles that. It is actively maintained and widely used by real
-red teams.
-
-**Mythic** is another command and control framework with a web
-interface. Good to know as an alternative.
-
-**PowerShell** is already on every Windows machine. We use it
-for scripting, testing, and as a target for AMSI practice.
-
-**SysWhispers** helps you talk directly to the Windows kernel,
-bypassing security monitoring.
-
-**Donut** converts regular programs into injectable code that
-runs entirely in memory without touching disk.
-
-**System Informer** shows you everything happening inside
-a running Windows system. Processes, memory, DLLs, network
-connections. Essential for understanding what is going on.
+- **Metasploit / msfvenom** - generate raw payload code that we wrap in our own evasion techniques
+- **Sliver** - modern command and control framework, actively maintained, used by real red teams
+- **Mythic** - alternative C2 framework with a web interface
+- **PowerShell** - already on every Windows machine, used for scripting and AMSI practice
+- **SysWhispers** - talk directly to the Windows kernel, bypassing security hooks
+- **Donut** - convert regular programs into injectable code that runs in memory
+- **System Informer** - see everything inside a running system: processes, memory, DLLs, connections
 
 ---
 
