@@ -495,7 +495,7 @@ Open PowerShell and run:
 
 ```powershell
 $eicar = 'X5O!P%@AP[4\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*'
-$eicar | Out-File -FilePath C:\Users\redteam\Desktop\test.txt
+$eicar | Out-File -FilePath "$env:USERPROFILE\Desktop\test.txt"
 ```
 
 This is the EICAR test string - a standard AV test, not real malware.
